@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UG Eventos | Plataforma Universitaria - Universidad de Guayaquil</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Fuente moderna desde Google Fonts -->
+    <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Barra de Navegación Institucional -->
+    <header class="navbar">
+        <div class="container nav-content">
+            <div class="logo-ug">
+                <div class="escudo-badge">UG</div>
+                <div>
+                    <h1>UG Eventos</h1>
+                    <span>Universidad de Guayaquil</span>
+                </div>
+            </div>
+            <nav class="nav-actions">
+                <button class="btn btn-outline" id="btnVerAsistencia">📋 Control de Asistencia (<span id="contadorInscritos">0</span>)</button>
+                <button class="btn btn-primary" id="btnAbrirModalEvento">+ Crear Evento</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Banner con Estilo Especial -->
+    <section class="hero">
+        <div class="container hero-content">
+            <span class="pill-tag">Portal Oficial de Difusión Universitaria</span>
+            <h2>Conecta, participa y vive la experiencia <span>Universidad de Guayaquil</span></h2>
+            <p>Explora congresos académicos, festivales culturales y torneos deportivos de todas las facultades en un solo lugar.</p>
+            
+            <!-- Barra de Búsqueda y Filtros -->
+            <div class="filter-bar">
+                <input type="text" id="buscadorEventos" placeholder="Buscar por título o facultad (ej. Ingeniería, Medicina, Fútbol)...">
+                <div class="category-pills">
+                    <button class="filter-btn active" data-categoria="Todos">Todos</button>
+                    <button class="filter-btn" data-categoria="Académico">🎓 Académicos</button>
+                    <button class="filter-btn" data-categoria="Cultural">🎭 Culturales</button>
+                    <button class="filter-btn" data-categoria="Deportivo">⚽ Deportivos</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catálogo de Eventos -->
+    <main class="container main-section">
+        <div class="section-header">
+            <h3>Próximos Eventos Programados</h3>
+            <span id="totalEventosText">Mostrando eventos activos</span>
+        </div>
+        
+        <div class="eventos-grid" id="contenedorEventos">
+            <!-- Las tarjetas de eventos se generan dinámicamente con JavaScript -->
+        </div>
+    </main>
+
+    <!-- MODAL 1: Crear / Registrar Nuevo Evento -->
+    <div class="modal-overlay" id="modalCrearEvento">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Registrar Nuevo Evento UG</h3>
+                <button class="close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <form id="formNuevoEvento">
+                <div class="form-group">
+                    <label>Título del Evento</label>
+                    <input type="text" id="tituloEvento" required placeholder="Ej. Congreso de Inteligencia Artificial UG">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select id="categoriaEvento" required>
+                            <option value="Académico">Académico</option>
+                            <option value="Cultural">Cultural</option>
+                            <option value="Deportivo">Deportivo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="date" id="fechaEvento" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Facultad / Sede</label>
+                        <input type="text" id="lugarEvento" required placeholder="Ej. Facultad de Ciencias Matemáticas">
+                    </div>
+                    <div class="form-group">
+                        <label>Cupos Disponibles</label>
+                        <input type="number" id="cuposEvento" required min="5" max="1000" value="50">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Descripción breve</label>
+                    <textarea id="descEvento" rows="3" required placeholder="Detalles del evento, ponentes o requisitos..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Publicar Evento</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Inscripción de Estudiante / Docente -->
+    <div class="modal-overlay" id="modalInscripcion">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Inscripción al Evento</h3>
+                <button class="close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <p class="modal-subtitle" id="tituloEventoInscripcion"></p>
+            <form id="formInscripcion">
+                <input type="hidden" id="eventoIdInscripcion">
+                <div class="form-group">
+                    <label>Nombres Completos</label>
+                    <input type="text" id="nombreParticipante" required placeholder="Ej. Andrés Cortez Zambrano">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cédula / Matrícula</label>
+                        <input type="text" id="cedulaParticipante" required placeholder="09XXXXXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Rol en la UG</label>
+                        <select id="rolParticipante">
+                            <option value="Estudiante">Estudiante</option>
+                            <option value="Docente">Docente</option>
+                            <option value="Administrativo">Administrativo</option>
+                            <option value="Invitado Externo">Invitado Externo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Correo Institucional (@ug.edu.ec)</label>
+                    <input type="email" id="correoParticipante" required placeholder="usuario@ug.edu.ec">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Confirmar Inscripción y Generar Pase</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: Panel de Control de Asistencia -->
+    <div class="modal-overlay" id="modalAsistencia">
+        <div class="modal-card modal-large">
+            <div class="modal-header">
+                <h3>Control de Asistencia e Inscritos</h3>
+                <button class="close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <p class="modal-subtitle">Marca la casilla para validar el ingreso del participante al evento.</p>
+            <div class="table-responsive">
+                <table class="tabla-asistencia">
+                    <thead>
+                        <tr>
+                            <th>Código Pase</th>
+                            <th>Participante</th>
+                            <th>Rol / Cédula</th>
+                            <th>Evento</th>
+                            <th>Estado Asistencia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaAsistenciaBody">
+                        <!-- Filas generadas por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Plataforma de Gestión de Eventos - Universidad de Guayaquil. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
